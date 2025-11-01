@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPESA</title>
+ 
+ <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: white;
+            text-align: center;
+            justify-content: center;
+            content: inherit;
+            background-size: 100%;
+            background-repeat: no-repeat;
+            scroll-behavior: smooth;
+            background-color: black;
+            
+        } 
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes rotating {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes glowEffect {
+    0%   { color: #004d00; text-shadow: 0 0 5px #004d00; }
+    12%  { color: #006600; text-shadow: 0 0 10px #006600; }
+    25%  { color: #008000; text-shadow: 0 0 15px #008000; }
+    37%  { color: #009900; text-shadow: 0 0 20px #009900; }
+    50%  { color: #00b300; text-shadow: 0 0 25px #00b300; }
+    62%  { color: #00cc00; text-shadow: 0 0 20px #00cc00; }
+    75%  { color: #00e600; text-shadow: 0 0 15px #00e600; }
+    87%  { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
+    100% { color: #004d00; text-shadow: 0 0 5px #004d00; }
+}
+
+
+@keyframes blink {
+    50% {
+        border-color: transparent;
+    }
+}
+
+video {
+    width: 300px;
+    height: 200px;
+}
+
+
+h2, h3 {
+    animation: glowEffect 9s infinite alternate;
+}
+        p {
+            color: #00c853;
+        }
+        
+        table {
+            width: 30%;
+            display: inline-table;
+            margin: 0 auto;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-color: #00c853;
+            color-scheme: dark;
+            color: #00c853;
+        }
+        .login-container input[type="text"], .login-container input[type="password"]{
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .button {
+        display: block;
+        padding: 10px;
+        background-color: #00c853;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+        margin: 10px auto;
+        width: 80%;
+        max-width: 300px;
+        cursor: pointer;
+        text-align: center;
+        transition: transform 0.2s ease, background-color 0.3s ease;
+    }
+
+    .button:hover {
+        background-color: #009e46;
+        transform: scale(1.05);
+    }
+
+    .button:active {
+        transform: scale(0.95);
+    }
+        .section {
+            display: none;
+            margin-top: 20px;
+        }
+        .section.active {
+            display: block;
+        }
+        #menu {
+            display: block;
+        }
+        .box {
+            position: relative;
+            width: 320px;
+            padding: 20px;
+            
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            animation: slideIn 1s ease-out;
+            margin: 0 auto;
+            background-blend-mode: soft-light;
+            
+        }
+
+        .box::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 15px #000);
+            border-radius: 20px;
+            animation: rotating 4s linear infinite;
+            animation-delay: -1s;
+            z-index: 1;
+            opacity: 0.5;
+        }
+
+        .box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, transform 0.3s ease;
+            background: transparent;
+            color: #00ff00;
+        }
+
+        .login-container input:focus {
+            border-color: #00c853;
+            outline: none;
+            transform: scale(1.05);
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 10px;
+            border: 0;
+            background: #00c853;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+
+
+        .clock {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(10, 10, 10, 0.1);
+            padding: 20px;
+            border-radius: 100px;
+            box-shadow: 0 0 10px #00ff00;
+            width: fit-content;
+            align-self: flex-end;
+            margin: 0 auto;
+            margin-top: 80px;
+            color: #00ff00;
+            animation: glowEffect 10s infinite alternate;
+            position: relative;
+        }
+        .day {
+            font-size: 16px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .time {
+            font-size: 60px;
+            letter-spacing: 5px;
+        }
+    </style>
+    
+    <script>
+         function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+            
+            document.getElementById('day').textContent = days[now.getDay()];
+            document.getElementById('time').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        
+        setInterval(updateClock, 1000);
+        updateClock();
+          function showSection(sectionId) {
+            // Hide menu buttons
+            document.getElementById("menu").style.display = "none";
+
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(function(section) {
+                section.classList.remove('active');
+            });
+
+            // Show the selected section
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+       function showMenu() {
+            document.getElementById("menu").style.display = "block";
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));   
+          
+            document.getElementById('mshwari').style.display = 'none';
+            document.getElementById('KCBMpesa').style.display = 'none';
+            document.getElementById('loansSavings').style.display = 'none';
+            document.getElementById('accountSettings').style.display = 'none';
+
+        }
+
+
+
+        function sendMoney() {
+            const phoneNumberS = document.getElementById('phoneNumberS').value.trim();
+            const amountS = document.getElementById('amountS').value.trim();
+            
+            if (phoneNumberS.length == 10 && amountS) {
+                alert('Proceeding to enter pin ');
+                alert('You wan send $ '+amountS+' to this guy?');
+                document.getElementById('sendMoney').classList.remove('active');
+                document.getElementById('enterPinSection').classList.add('active');
+            } else {
+                alert('Please enter valid details');
+            }
+            
+        }
+
+        function withdrawMoney() {
+            const agentNumber = document.getElementById('agentNumber').value.trim();
+            const storeNumber = document.getElementById('storeNumber').value.trim();
+            const amountS = document.getElementById('amountW').value.trim();
+            
+            if (phoneNumberS && amountS) {
+                alert('Proceeding to enter pin');
+                document.getElementById('withdrawMoney').classList.remove('active');
+                document.getElementById('enterPinSection').classList.add('active');
+            } else {
+                alert('Please enter valid details');
+            }
+        }
+
+        function buyAirtimeSelf() {
+            const amount = document.getElementById('amountSelf').value.trim();
+            if (amount) {
+                alert('Proceeding to enter pin');
+                document.getElementById('forSelf').classList.remove('active');
+                document.getElementById('enterPinSection').classList.add('active');
+            } else {
+                alert('Please enter a valid amount');
+            }
+        }
+        function buyAirtimeOthers() {
+            const phoneNumber = document.getElementById('phoneNumberOthers').value.trim();
+            const amount = document.getElementById('amountOthers').value.trim();
+            if (phoneNumber && amount) {
+                alert('Proceeding to enter pin');
+                document.getElementById('forOthers').classList.remove('active');
+                document.getElementById('enterPinSection').classList.add('active');
+            } else {
+                alert('Please enter valid details');
+            }
+        }
+
+        function promptPinA() {
+    const amount = document.getElementById('amountToMshwari').value.trim();
+    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+        alert('Please enter a valid positive amount.');
+        return; // Stop execution if amount is invalid
+    }
+
+    alert('Proceeding to enter pin');
+    document.getElementById('sendToMshwari').style.display = 'none';
+    document.getElementById('mshwari').style.display = 'none';
+    document.getElementById('mshwariSource').classList.remove('active');
+    document.getElementById('enterPinSection').classList.add('active');
+}
+
+function promptPinB() {
+    const amount = document.getElementById('amountFromMshwari').value.trim();
+    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+        alert('Please enter a valid positive amount.');
+        return; // Stop execution if amount is invalid
+    }
+
+    alert('Proceeding to enter pin');
+    document.getElementById('withdrawFromMshwari').style.display = 'none';
+    document.getElementById('mshwari').style.display = 'none';
+    document.getElementById('mshwariSource').classList.remove('active');
+    document.getElementById('enterPinSection').classList.add('active');
+}
+
+function promptPinC() {
+    const amount = document.getElementById('amountMpesaLSA').value.trim(); //Fixed, used to be amount, which was a duplicate ID.
+    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+        alert('Please enter a valid positive amount.');
+        return; // Stop execution if amount is invalid
+    }
+
+    alert('Proceeding to enter pin');
+    document.getElementById('mshwari').style.display = 'none';
+    document.getElementById('openaccountLSA').style.display = 'none';
+    document.getElementById('lockSavingsAccount').style.display = 'none';
+    document.getElementById('openaccountLSAfromMpesa').classList.remove('active');
+    document.getElementById('openaccountLSAfromMpesa').style.display = 'none';
+    document.getElementById('enterPinSection').classList.add('active');
+}
+
+function promptPinD() {
+    const amount = document.getElementById('amountMshwariLSA').value.trim(); //Fixed, used to be amount, which was a duplicate ID.
+    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+        alert('Please enter a valid positive amount.');
+        return; // Stop execution if amount is invalid
+    }
+
+    alert('Proceeding to enter pin');
+    document.getElementById('mshwari').style.display = 'none';
+    document.getElementById('lockSavingsAccount').style.display = 'none';
+    document.getElementById('openaccountLSA').style.display = 'none';
+    document.getElementById('openaccountLSAfromMshwari').classList.remove('active');
+    document.getElementById('openaccountLSAfromMshwari').style.display = 'none';
+    document.getElementById('enterPinSection').classList.add('active');
+}
+function promptPinE() {
+    const amount = document.getElementById('amountSaveFromMpesaToLSA').value.trim();
+    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+        alert('Please enter a valid positive amount.');
+        return; // Stop execution if amount is invalid
+    }
+
+    alert('Proceeding to enter pin');
+
+    // Hide the saveFromMpesaToLSA section
+    document.getElementById('saveFromMpesaToLSA').style.display = 'none';
+
+    document.getElementById('saveToLSA').style.display = 'none';
+    document.getElementById('saveToLSA').classList.remove('active');
+    document.getElementById('mshwari').style.display = 'none';
+    document.getElementById('enterPinSection').classList.add('active');
+}
+
+function promptPinF() {
+    const amount = document.getElementById('amountSaveFromMshwariToLSA').value.trim();
+    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+        alert('Please enter a valid positive amount.');
+        return; // Stop execution if amount is invalid
+    }
+
+    alert('Proceeding to enter pin');
+    
+    // Hide the saveFromMshwariToLSA section
+    document.getElementById('saveFromMshwariToLSA').style.display = 'none';
+
+    document.getElementById('saveToLSA').style.display = 'none';
+    document.getElementById('saveToLSA').classList.remove('active');
+    document.getElementById('mshwari').style.display = 'none';
+    document.getElementById('saveFromMshwariToLSA').classList.remove('active');
+    document.getElementById('enterPinSection').classList.add('active');
+}
+
+function promptPinG() {
+    const amount = document.getElementById('amountWithdrawLSA').value.trim();
+    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+        alert('Please enter a valid positive amount.');
+        return; // Stop execution if amount is invalid
+    }
+
+    alert('Proceeding to enter pin');
+    
+    // Hide the saveFromMshwariToLSA section
+    document.getElementById('saveFromMshwariToLSA').style.display = 'none';
+
+    document.getElementById('withdrawLSA').style.display = 'none';
+    document.getElementById('withdrawLsa').classList.remove('active');
+    document.getElementById('mshwari').style.display = 'none';
+    document.getElementById('enterPinSection').classList.add('active');
+    document.getElementById('enterPinSection').style.display = 'block';
+
+}
+function promptPinI() {
+    const amount = document.getElementById('amountLoanFromMshwari').value.trim();
+    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+        alert('Please enter a valid positive amount.');
+        return; // Stop execution if amount is invalid
+    }
+
+    alert('Proceeding to enter pin');
+    document.getElementById('loan').style.display = 'none';
+    document.getElementById('mshwari').style.display = 'none';
+    document.getElementById('enterPinSection').classList.add('active');
+}
+
+function promptPinJ() {
+document.getElementById('checkBalance').style.display = 'none';
+document.getElementById('mshwari').style.display = 'none';
+document.getElementById('enterPinSection').classList.add('active');
+}
+function promptPinK() {
+document.getElementById('miniStatement').style.display = 'none';
+document.getElementById('mshwari').style.display = 'none';
+document.getElementById('enterPinSection').classList.add('active');
+}
+
+        function enterPin() {
+            const pin = document.getElementById('pin').value.trim();
+            if (pin.length === 4 && /^\d+$/.test(pin) && pin == 5052) {
+                alert('Transaction successful\nWe"ll get back to you'); 
+                showMenu();
+            } else {
+                alert('Invalid PIN. Please enter a 4-digit correct numeric PIN.');
+            }
+            }
+        
+
+
+       
+function showLoansSavings() {
+    document.getElementById("menu").style.display = "none";  
+    document.getElementById("loansSavings").style.display = "block";
+    document.getElementById('mshwari').style.display = 'none';
+    document.getElementById('KCBMpesa').style.display = 'none';
+}
+function showAccountSettings() {
+    document.getElementById("menu").style.display = "none";  
+    document.getElementById("accountSettings").style.display = "block";
+    document.getElementById('mshwari').style.display = 'none';
+    document.getElementById('KCBMpesa').style.display = 'none';
+}
+
+
+
+function cancelLoansSavings() { 
+    document.getElementById("loansSavings").style.display = "none";  
+    document.getElementById("menu").style.display = "block";  
+}
+
+function showMshwari() {
+    document.getElementById("loansSavings").style.display = "none";
+    document.getElementById("mshwari").style.display = "block";
+    document.getElementById("mshwariMenu").style.display = "block";
+}
+
+function cancelMshwari() { 
+    document.getElementById("mshwari").style.display = "none";  
+    document.getElementById("loansSavings").style.display = "block";  
+}
+
+function showKCBMpesa() {
+    document.getElementById("loansSavings").style.display = "none";
+    document.getElementById("KCBMpesa").style.display = "block";
+}
+
+function cancelKCBMpesa() { 
+    document.getElementById("KCBMpesa").style.display = "none";  
+    document.getElementById("loansSavings").style.display = "block";  
+}
+
+function sendToMshwari() {
+    showMshwariMenu('sendToMshwari');
+}
+
+function withdrawFromMshwari() {
+    showMshwariMenu('withdrawFromMshwari');
+}
+
+function lockSavingsAccount() {
+    showMshwariMenu('lockSavingsAccount');
+}
+
+function loan() {
+    showMshwariMenu('loan');
+}
+
+function checkBalance() {
+    showMshwariMenu('checkBalance');
+}
+
+function miniStatement() {
+    showMshwariMenu('miniStatement');
+}
+
+function showMshwariMenu(optionId) {
+    document.getElementById('mshwariMenu').style.display = 'none';
+    let options = ['sendToMshwari', 'withdrawFromMshwari', 'lockSavingsAccount', 'loan', 'checkBalance', 'miniStatement'];
+    options.forEach(option => {
+        let element = document.getElementById(option);
+        if (element) {
+            element.style.display = option === optionId ? 'block' : 'none';
+        }
+    });
+    
+}
+
+function cancelsendToMshwari() {
+    document.getElementById('sendToMshwari').style.display = 'none';
+    document.getElementById('mshwariMenu').style.display = 'block';
+}
+
+function cancelWithdrawFromMshwari() {
+    document.getElementById('withdrawFromMshwari').style.display = 'none';
+    document.getElementById('mshwariMenu').style.display = 'block';
+}
+function cancelLockSavingsAccount() {
+    document.getElementById('lockSavingsAccount').style.display = 'none';
+    document.getElementById('mshwariMenu').style.display = 'block';
+}
+function cancelloans() {
+    document.getElementById('loan').style.display = 'none';
+    document.getElementById('mshwariMenu').style.display = 'block';
+}
+function cancelCheckBalance() {
+    document.getElementById('checkBalance').style.display = 'none';
+    document.getElementById('mshwariMenu').style.display = 'block';
+}
+function cancelMiniStatement() {
+    document.getElementById('miniStatement').style.display = 'none';
+    document.getElementById('mshwariMenu').style.display = 'block';
+}
+function openaccountLSA() {
+    document.getElementById('lockSavingsAccount').style.display = 'none';
+    document.getElementById('lockSavingsAccount').classList.remove('active');
+    document.getElementById("openaccountLSA").style.display = "block";  
+    document.getElementById("saveLSA").style.display = "none";
+    document.getElementById('withdrawLSA').style.display = 'none';
+    document.getElementById('checkBalanceLSA').style.display = 'none';
+    document.getElementById('miniStatementLSA').style.display = 'none';
+}
+function cancelopenaccountLSA() {
+    document.getElementById("openaccountLSA").style.display = "none";
+    document.getElementById('lockSavingsAccount').style.display = 'block';
+    document.getElementById('lockSavingsAccount').classList.add('active');
+
+}
+function showopenaccountLSAfromMpesa() {
+    document.getElementById("openaccountLSA").style.display = "none";
+    document.getElementById("openaccountLSAfromMshwari").style.display = "none";
+    document.getElementById("openaccountLSAfromMpesa").style.display = "block";
+}
+function cancelopenaccountLSAfromMpesa() {
+    document.getElementById("openaccountLSA").style.display = "block";
+    document.getElementById("openaccountLSAfromMshwari").style.display = "none";
+    document.getElementById("openaccountLSAfromMpesa").style.display = "none";
+}
+function showopenaccountLSAfromMshwari() {
+    document.getElementById("openaccountLSA").style.display = "none";
+    document.getElementById("openaccountLSAfromMpesa").style.display = "none";
+    document.getElementById("openaccountLSAfromMshwari").style.display = "block";
+}
+function cancelopenaccountLSAfromMshwari() {
+    document.getElementById("openaccountLSA").style.display = "block";
+    document.getElementById("openaccountLSAfromMshwari").style.display = "none";
+    document.getElementById("openaccountLSAfromMpesa").style.display = "none";
+}
+function saveToLSA() {
+    document.getElementById('openaccountLSA').classList.remove('active');
+    document.getElementById('lockSavingsAccount').style.display = 'none';
+    document.getElementById("openaccountLSA").style.display = "none";  
+    document.getElementById("saveToLSA").style.display = "block";
+    document.getElementById('withdrawLSA').style.display = 'none';
+    document.getElementById('checkBalanceLSA').style.display = 'none';
+    document.getElementById('miniStatementLSA').style.display = 'none';
+}
+function cancelSaveToLSA() {
+    document.getElementById('openaccountLSA').classList.remove('active');
+    document.getElementById('lockSavingsAccount').style.display = 'block';
+    document.getElementById("openaccountLSA").style.display = "none";  
+    document.getElementById("saveToLSA").style.display = "none";
+    document.getElementById('withdrawLSA').style.display = 'none';
+    document.getElementById('checkBalanceLSA').style.display = 'none';
+    document.getElementById('miniStatementLSA').style.display = 'none';
+}
+function showsaveFromMpesaToLSA() {
+    document.getElementById("saveToLSA").style.display = "none";
+    document.getElementById("saveFromMshwariToLSA").style.display = "none";
+    document.getElementById("saveFromMpesaToLSA").style.display = "block";
+}
+function cancelsaveFromMpesaToLSA() {
+    document.getElementById("saveToLSA").style.display = "block";
+    document.getElementById("saveFromMpesaToLSA").style.display = "none";
+    document.getElementById("saveFromMshwariToLSA").style.display = "none";
+}
+function showsaveFromMshwariToLSA() {
+    document.getElementById("saveToLSA").style.display = "none";
+    document.getElementById("saveFromMpesaToLSA").style.display = "none";
+    document.getElementById("saveFromMshwariToLSA").style.display = "block";
+}
+function cancelsaveFromMshwariToLSA() {
+    document.getElementById("saveToLSA").style.display = "block";
+    document.getElementById("saveFromMshwariToLSA").style.display = "none";
+    document.getElementById("saveFromMpesaToLSA").style.display = "none";
+}
+
+function withdrawLSA() {
+    document.getElementById('lockSavingsAccount').style.display = 'none';
+    document.getElementById('openaccountLSA').classList.remove('active');  
+    document.getElementById('saveToLSA').style.display = 'none';
+    document.getElementById('withdrawLSA').style.display = 'block';
+    document.getElementById('checkBalanceLSA').style.display = 'none';
+    document.getElementById('miniStatementLSA').style.display = 'none';
+}
+
+function cancelwithdrawLSA() {
+    document.getElementById('withdrawLSA').style.display = 'none';
+    document.getElementById('lockSavingsAccount').style.display = 'block';
+}
+function checkBalanceLSA() {
+    document.getElementById('lockSavingsAccount').style.display = 'none';
+    document.getElementById("openaccountLSA").style.display = "none";  
+    document.getElementById("saveLSA").style.display = "none";
+    document.getElementById('withdrawLSA').style.display = 'none';
+    document.getElementById('checkBalanceLSA').style.display = 'block';
+    document.getElementById('checkBalanceLSA').classList.add ('active');
+    document.getElementById('miniStatementLSA').style.display = 'none';
+}
+function cancelCheckBalanceLSA() {
+    document.getElementById('checkBalanceLSA').style.display = 'none';
+    document.getElementById('lockSavingsAccount').style.display = 'block';
+}
+function miniStatementLSA() {
+    document.getElementById('lockSavingsAccount').style.display = 'none';
+    document.getElementById("openaccountLSA").style.display = "none";  
+    document.getElementById("saveLSA").style.display = "none";
+    document.getElementById('withdrawLSA').style.display = 'none';
+    document.getElementById('checkBalanceLSA').style.display = 'none';
+    document.getElementById('miniStatementLSA').style.display = 'block';
+    document.getElementById('miniStatementLSA').classList.add ('active') ;
+}
+function cancelMiniStatementLSA() {
+    document.getElementById('miniStatementLSA').style.display = 'none';
+    document.getElementById('lockSavingsAccount').style.display = 'block';
+}
+
+function checkMshwariBalance() {
+    document.getElementById('checkMshwariBalance').style.display = 'none';
+    document.getElementById('mshwari').style.display = 'none';
+    document.getElementById('enterPinSection').style.display = 'block';
+    document.getElementById('enterPinSection').classList.add ('active') ;
+}
+
+function accountSettings() {    
+    document.getElementById('accountSettings').classList.add ('active');
+    document.getElementById('menu').style.display = 'none';
+}
+
+function entireMinistatement() {
+    document.getElementById('entireMiniStatement').style.diplay = 'block';
+    document.getElementById('pinManager').style.diplay = 'none';
+    document.getElementById('changeLanguage').style.diplay = 'none';
+    document.getElementById('updateMenu').style.diplay = 'none';
+    document.getElementById('balance').style.diplay = 'none';
+    document.getElementById('accountSettings').classList.remove ('active');
+    document.getElementById('accountSettings').style.display = 'none';
+    document.getElementById('menu').style.display = 'none';
+
+}
+
+function pinManager() {
+    document.getElementById('entireMiniStatement').style.diplay = 'none';
+    document.getElementById('pinManager').style.diplay = 'block';
+    document.getElementById('changeLanguage').style.diplay = 'none';
+    document.getElementById('updateMenu').style.diplay = 'none';
+    document.getElementById('balance').style.diplay = 'none';
+    document.getElementById('accountSettings').classList.add ('active');
+    document.getElementById('accountSettings').style.display = 'none';
+
+
+}
+
+function changeLanguage() {
+    document.getElementById('entireMiniStatement').style.diplay = 'none';
+    document.getElementById('pinManager').style.diplay = 'none';
+    document.getElementById('changeLanguage').style.diplay = 'block';
+    document.getElementById('updateMenu').style.diplay = 'none';
+    document.getElementById('balance').style.diplay = 'none';
+    document.getElementById('accountSettings').classList.remove ('active');
+    document.getElementById('accountSettings').style.display = 'none';
+    document.getElementById('menu').style.display = 'none';
+
+    
+}
+
+function updateMenu() {
+    document.getElementById('entireMiniStatement').style.diplay = 'none';
+    document.getElementById('pinManager').style.diplay = 'none';
+    document.getElementById('changeLanguage').style.diplay = 'none';
+    document.getElementById('updateMenu').style.diplay = 'block';
+    document.getElementById('balance').style.diplay = 'none';
+    document.getElementById('accountSettings').classList.remove ('active');
+    document.getElementById('accountSettings').style.display = 'none';
+
+document.getElementById('menu').style.display = 'none';
+}
+
+function balance() {
+    document.getElementById('entireMiniStatement').style.diplay = 'none';
+    document.getElementById('pinManager').style.diplay = 'none';
+    document.getElementById('changeLanguage').style.diplay = 'none';
+    document.getElementById('updateMenu').style.diplay = 'none';
+    document.getElementById('balance').style.diplay = 'block';
+    
+    document.getElementById('accountSettings').style.display = 'none';
+    document.getElementById('menu').style.display = 'none';
+
+
+}
+
+
+    </script>
+
+</head>
+<body>
+    <h1>MPESA</h1>
+
+    <!-- Menu Buttons -->
+    <div id="menu">
+        <a class="button" onclick="showSection('sendMoney')">Send Money</a>
+        <a class="button" onclick="showSection('withdrawMoney')">Withdraw Money</a>
+        <a class="button" onclick="showSection('buyAirtime')">Buy Airtime</a>
+        <a class="button" onclick="showLoansSavings()">Loans and Savings</a>
+        <a class="button" onclick="showAccountSettings()">My Account</a>
+    </div>
+    
+
+    <!-- Sections -->
+    <!-- Sending Section -->
+    <div class="section" id="sendMoney">
+        <h2>Send Money</h2>
+        <p>Share money with loved ones and everyone else at such low transaction rates.</p>
+        <div class="box">
+        <div class="login-container">
+            <input type="tel" placeholder="Enter phone number" id="phoneNumberS" required><br>
+            <input type="number" placeholder="Enter amount" id="amountS" required><br>
+        </div>
+        </div>
+        
+        <button class="button" onclick="sendMoney()">Proceed</button>
+        <a class="button" onclick="showMenu()">Back</a>
+    </div>
+
+    <!-- Enter Pin Section -->
+    <div class="section" id="enterPinSection">
+        <div class="box">
+            <div class="login-container">
+            <p>Enter your pin</p>
+            <input type="password" placeholder="Enter Pin" id="pin" required>
+            <button type="submit" class="button" onclick="enterPin()">FINISH</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Withdrawal Section -->
+    <div class="section" id="withdrawMoney">
+        <h2>Withdraw Money</h2>
+        <p>Need hard cash from soft cash?<br>This is your spot.</p>
+        <div class="box">
+            <div class="login-container">
+                <input type="number" placeholder="Enter agent number" id="agentNumber" required><br>
+                <input type="number" placeholder="Enter store number" id="storeNumber" required><br>
+                <input type="number" placeholder="Enter amount" id="amountW" required><br>
+                
+            </div>
+        </div>
+        <button class="button" onclick="withdrawMoney()">Proceed</button>
+        <a class="button" onclick="showMenu()">Back</a>
+    </div>
+
+    <!-- Buy Airtime Section -->
+   
+    <div class="section" id="buyAirtime">
+        <h2>Buy Airtime</h2>
+        <a class="button" onclick="showSection('forSelf')">For Self</a>
+        <a class="button" onclick="showSection('forOthers')">For Others</a>
+        <a class="button" onclick="showMenu()">Cancel</a>
+    </div>
+    <div class="section" id="forSelf">
+        <h3>For Self</h3>
+        <div class="box">
+            <div class="login-container">
+            <input type="number" placeholder="Enter amount" id="amountSelf" required>
+            </div>
+            <button class="button" onclick="buyAirtimeSelf()">Proceed</button>
+            <a class="button" onclick="showMenu()">Cancel</a>
+        </div>
+        <table>
+            <caption>Airtime Deals</caption>
+            <tr>
+                <th>Amount</th>
+                <th>Price</th>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>9</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td>18</td>
+            </tr>
+            <tr>
+                <td>50</td>
+                <td>45</td>
+            </tr>
+            <tr>
+                <td>100</td>
+                <td>90</td>
+            </tr>
+            <tr>
+                <td>200</td>
+                <td>180</td>
+            </tr>
+            <tr>
+                <td>500</td>
+                <td>450</td>
+            </tr>
+            <tr>
+                <td>1000</td>
+                <td>900</td>
+            </tr>
+            <footer>Find one that suits you<br>Or suit yourself with any amount</footer>
+        </table>
+    </div>
+    <div class="section" id="forOthers">
+        <h3>For Others</h3>
+        <div class="box">
+            <div class="login-container">
+            <input type="number" placeholder="Enter phone number" id="phoneNumberOthers" required>
+            <input type="number" placeholder="Enter amount" id="amountOthers" required>
+            </div>
+            <button class="button" onclick="buyAirtimeOthers()">Proceed</button>
+            <a class="button" onclick="showMenu()">Cancel</a>
+        </div>
+    </div>
+    </div>
+
+    <!-- Loans and Savings Section -->
+    <div class="section" id="loansSavings">
+        <h2>Loans and Savings</h2>
+        <p>We offer several types of loans depending on your needs.</p>
+        <a class="button" onclick="showMshwari()">Mshwari</a>
+        <a class="button" onclick="showKCBMpesa()">KCB Mpesa</a>
+        <a class="button" onclick="showMenu()">Back</a>
+    </div>
+    <!--Options Mshwari-->
+    <div class="section" id="mshwari">
+        <div class="box">
+        <h3 style="color: #00c853;">Mshwari</h3>
+        <div class="section" id="mshwariMenu">
+            <a class="button" onclick="sendToMshwari()">Send to Mshwari</a>
+            <a class="button" onclick="withdrawFromMshwari()">Withdraw from Mshwari</a>
+            <a class="button" onclick="lockSavingsAccount()">Lock savings account</a>
+            <a class="button" onclick="loan()">Loan</a>
+            <a class="button" onclick="checkBalance()">Check Balance</a>
+            <a class="button" onclick="miniStatement()">Mini-Statement</a>
+            <a class="button" onclick="cancelMshwari()" style="width: fit-content;">Cancel</a>
+        </div>
+        </div>
+    </div>
+<!--Send To Mshwari-->
+<div class="section" id="sendToMshwari">
+    <div class="box">
+    <div class="login-container" id="mshwariSource">
+        <input type="number" placeholder="Enter Amount" id="amountToMshwari" required>
+    </div>
+    <button class="button" onclick="promptPinA()">Proceed</button>
+    <a class="button" onclick="cancelsendToMshwari()">Cancel</a>
+    </div>
+</div>
+<!--Withdraw from Mshwari-->
+<div class="section" id="withdrawFromMshwari">
+    <div class="box">
+        <div class="login-container" id="mshwariSource">
+            <input type="number" placeholder="Enter Amount" id="amountFromMshwari" required>
+        </div>
+        <button class="button" onclick="promptPinB()">Proceed</button>
+    <a class="button" onclick="cancelWithdrawFromMshwari()">Cancel</a>
+    </div>
+</div>
+<!--Lock Savings Account-->
+<div class="section" id="lockSavingsAccount">
+    <div class="box">
+        <a class="button" onclick="openaccountLSA()">Open Account</a>
+        <a class="button" onclick="saveToLSA()">Save</a>
+        <a class="button" onclick="withdrawLSA()">Withdraw</a>
+        <a class="button" onclick="checkBalanceLSA()">Check Balance</a>
+        <a class="button" onclick="miniStatementLSA()">Mini Statement</a>
+        
+    <a class="button" onclick="cancelLockSavingsAccount()">Cancel</a>
+    </div>
+</div>
+
+<!--Lock Savings Sections-->
+<!--=====================================================================-->
+    <!--Open Account-->
+<div class="section" id="openaccountLSA">
+    <div class="box">
+        <a class="button" onclick="showopenaccountLSAfromMpesa()">From Mpesa</a>
+        <a class="button" onclick="showopenaccountLSAfromMshwari()">From Mshwari</a>
+    <a class="button" onclick="cancelopenaccountLSA()">Cancel</a>
+    </div>
+</div>
+        <!--From mpesa-->
+<div class="section" id="openaccountLSAfromMpesa">
+    <div class="box">
+        <div class="login-container">
+            <p>Enter Target Amount</p>
+            <input type="number" placeholder="Enter Target Amount" id="amountMpesaLSA">
+            <button class="button" onclick="promptPinC()">Proceed</button>
+            <a class="button" onclick="cancelopenaccountLSAfromMpesa()">Cancel</a>
+        </div>
+    </div>
+
+</div>
+        <!--From mshwari-->
+<div class="section" id="openaccountLSAfromMshwari">
+    <div class="box">
+        <div class="login-container">
+            <p>Enter Target Amount</p>
+            <input type="number" placeholder="Enter Target Amount" id="amountMshwariLSA">
+            <button class="button" onclick="promptPinD()">Proceed</button>
+            <a class="button" onclick="cancelopenaccountLSAfromMshwari()">Cancel</a>
+        </div>
+    </div>
+    
+</div>
+
+    <!--Save To LSA-->
+<div class="section" id="saveToLSA">
+    <div class="box">
+        <a class="button" onclick="showsaveFromMpesaToLSA()">From Mpesa</a>
+        <a class="button" onclick="showsaveFromMshwariToLSA()">From Mshwari</a>
+        <a class="button" onclick="cancelSaveToLSA()">Cancel</a>
+    </div>
+</div>
+
+        <!-- Save From mpesa To LSA-->
+<div class="section" id="saveFromMpesaToLSA">
+    <div class="box">
+        <div class="login-container">
+            <p>Enter Your Target Amount</p>
+            <input type="number" placeholder="Target Amount" id="amountSaveFromMpesaToLSA">
+            <button class="button" onclick="promptPinE()">Proceed</button>
+            <a class="button" onclick="cancelsaveFromMpesaToLSA()">Cancel</a>
+        </div>
+    </div>
+
+</div>
+        <!-- Save From mshwari To LSA-->
+<div class="section" id="saveFromMshwariToLSA">
+    <div class="box">
+        <div class="login-container">
+            <p>Enter Your Target Amount</p>
+            <input type="number" placeholder="Target Amount" id="amountSaveFromMshwariToLSA">
+            <button class="button" onclick="promptPinF()">Proceed</button>
+            <a class="button" onclick="cancelsaveFromMshwariToLSA()">Cancel</a>
+        </div>
+    </div>
+    
+</div>
+
+  <!--Withdraw LSA-->
+  <div class="section" id="withdrawLSA">
+    <div class="box">
+        <div class="login-container">
+            <p>Enter Amount</p>
+            <input type="number" placeholder="Enter Amount" id="amountWithdrawLSA">
+        </div>
+        <button class="button" onclick="promptPinG()">Proceed</button>
+        <a class="button" onclick="cancelwithdrawLSA()">Cancel</a>
+    </div>
+</div>
+    <!--Chack Balance LSA-->
+    <div class="section" id="checkBalanceLSA">
+        <div class="box">
+            <div class="login-container">
+                <p>Confirm check lock savings balance</p>
+                <a class="button" onclick="promptPinH()">Confirm</a>
+                <a class="button" onclick="cancelCheckBalanceLSA()">Cancel</a>
+            </div>
+        </div>
+    </div>
+    <!--Mini Statement LSA-->
+<div class="section" id="miniStatementLSA">
+    <div class="box">
+        <div class="login-container">
+            <p>Confirm retrieve mini statement</p>
+            <input type="date">
+        </div>
+    </div>
+</div>
+
+<!--======================END OF LOCK SAVINGS=======================-->
+
+<!--Loan-->
+<div class="section" id="loan">
+    <div class="box">
+        <div class="login-container">
+    <p>Need a hand up?<br>We got you<i><br>Enter amount</i></p>
+    <input type="number" id="amountLoanFromMshwari" placeholder="Loan Amount">
+    <a class="button" onclick="promptPinI()">Request</a>
+    <a class="button" onclick="cancelloans()">Cancel</a>
+        </div>
+    </div>
+</div>
+<!--Check Balance-->
+<div class="section" id="checkBalance">
+    <div class="box">
+    <p>Confirm Check Balance</p>
+    <a class="button" onclick="promptPinJ()">Confirm</a>
+    <a class="button" onclick="cancelCheckBalance()">Cancel</a>
+    </div>
+ </div>
+ <!--Mini Statement-->
+ <div class="section" id="miniStatement">
+    <div class="box">
+    <p>Confirm retrieve mini statement</p>
+    <a class="button" onclick="promptPinK()">Confirm</a>
+    <a class="button" onclick="cancelMiniStatement()">Cancel</a>
+    </div>
+ </div>
+    </div>
+
+    <!--======================End of Msshwari=====================-->
+
+    <!--KCB Mpesa-->
+    <div class="section" id="KCBMpesa">
+            <h3>KCB Mpesa</h3>
+            <div class="box">
+                <a class="button" onclick="showMenu()">Activate</a>
+
+                <a class="button" onclick="cancelKCBMpesa()">Cancel</a>
+            </div>
+    </div>
+     
+      <!--===================================END OF LOANS AND SAVINGS===================-->
+
+    <!-- My Account Section -->
+     
+   <div class="section" id="accountSettings">
+        <div class="box">
+            <div class="login-container">
+        <h2>My Account</h2>
+        <p>Manage your account and settings.</p>
+        <a class="button" onclick="showSection('entireMiniStatement')">Mini-Statement</a>
+        <a class="button" onclick="showSection('pinManager')">Mpesa PIN Manager</a>
+        <a class="button" onclick="showSection('changeLanguage')">Change Language</a>
+        <a class="button" onclick="showSection('updateMenu')">Update Customer Menu</a>
+        <a class="button" onclick="showSection('balance')">Check Balance</a>
+
+            </div>
+
+
+        <a class="button" onclick="showMenu()">Back</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="entireMiniStatement">
+        <div class="box">
+            <div class="login-container">
+                <p>Confirm retrieve Mini-Statement</p>
+                <a class="button" onclick="getStatement()">Confirm</a>
+                <a class="button" onclick="showSection('accountSettings')">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="pinManager">
+        <div class="box">
+            <div class="login-container">
+                <input type="password" placeholder="Enter Old Pin" id="oldPin">
+                <input type="password" placeholder="Enter New Pin" id="changePin">
+                <input type="password" placeholder="Confirm New Pin" id="confirmChangePin">
+                <a class="button" onclick="resetPin()">Change Pin</a>
+                <a class="button" onclick="showSection('accountSettings')">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="changeLanguage">
+        <div class="box">
+            <div class="login-container">
+                <p>Choose a language</p>
+                <select id="newLanguage">
+                <option value="en">English</option>
+                <option value="sw">Swahili</option>
+            </select>
+            <a class="button" onclick="changeLanguage()">Change Language</a>
+            <a class="button" onclick="showSection('accountSettings')">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="updateMenu">
+        <div class="box">
+            <div class="login-container">
+                <p>Update your customer menu options.</p>
+                <a class="button" onclick="updateMenu()">Update</a>
+                <a class="button" onclick="showSection('accountSettings')">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="balance">
+        <div class="box">
+            <div class="login-container">
+                <p>Confirm Check Balance</p>
+                <a class="button" onclick="getBalance()">Confirm</a>
+                <a class="button" onclick="showSection('accountSettings')">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+
+ <div class="clock" id="clock">
+    <div class="day" id="day">SUN</div>
+    <div class="time" id="time">12:00:00</div>
+ </div>
+ 
+ 
+
+
+ </body>
+  </html>
